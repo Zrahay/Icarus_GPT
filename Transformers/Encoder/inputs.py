@@ -1,7 +1,8 @@
 """
 This file is the inputs that we are going to send in the Transformer Block
 """
-from math import cos, sin, sqrt
+from math import cos, sin, sqrt, pow
+import torch
 import torch.nn as nn
 import numpy as np
 
@@ -47,7 +48,7 @@ class PositionalEmbeddings(nn.Module):
         # We need to iterate through self.n and self.d_model to to calculate the embeddings using sine and cosine
         n = X.shape[0]
 
-        matrix = [[self.calculate(r, c) for c in range(self.d_model - 1)] for r in range(n)]
+        matrix = torch.tensor([[self.calculate(r, c) for c in range(self.d_model)] for r in range(n)], dtype=torch.float32)
 
         try:
             layer_output = matrix + X
@@ -62,9 +63,11 @@ class PositionalEmbeddings(nn.Module):
     def calculate(self, row_number, column_number):
         # I will use this helper function to calculate the sine embeddings.
         # Sine only works for the even dimensions. Its formula is -> sin(pos / (10000 ^ (2*i / d_model)))
-        cos_answer = cos(row_number / ((2 * (column_number)) / (self.d_model)))
-        sine_answer = sin(row_number / ((2 * (column_number + 1)) / (self.d_model)))
-        return (cos_answer, sine_answer)
+        denominator = pow(10000, (2 * column_number) / self.d_model)
+        if column_number % 2 == 0:
+            return sin(row_number / denominator)
+        else:
+            return cos(row_number / denominator)
 
 
 
