@@ -13,13 +13,14 @@ class Encoder(nn.Module):
     def __init__(self):
         """
         We are going to use this constructor to define the Encoder Layer
+        Dimensions: vocab_size=100, d_model=6, heads=2, d_ff=12, max_seq_len=50
         """
-        self.input_embeddings_layer = InputEmbeddings()
-        self.positonal_embeddings_layer = PositionalEmbeddings()
-        self.multi_head_attention = Attention()
-        self.feed_forward = Feedforward()
-        self.add_norm = AddNorm()
-        # Forgot to implement the Add and Norm Layer
+        super().__init__()
+        self.input_embeddings_layer = InputEmbeddings(vocab_size=100, d_model=6)
+        self.positonal_embeddings_layer = PositionalEmbeddings(d_model=6, max_seq_len=50)
+        self.multi_head_attention = Attention(d_model=6, heads=2)
+        self.feed_forward = Feedforward(d_model=6, d_ff=12)
+        self.add_norm = AddNorm(d_model=6)
 
     def forward(self, X):
         """

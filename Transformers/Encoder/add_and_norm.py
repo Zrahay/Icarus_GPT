@@ -6,17 +6,20 @@ In this layer, we are going to add the Residual Connections and we are going to
 we are going to perform some normalization tasks
 """
 
+import torch
 import torch.nn as nn 
 import numpy as np 
 from .attention import Attention
 
 class AddNorm(nn.Module):
-    def __init__(self):
+    def __init__(self, d_model):
         """
         This is the constructor of the class
+        d_model: embedding dimension (6)
         """
         # In the norm layer we add the Input Embeddings to the output from the Multi-Head Attention Block
-        super.__init__()
+        super().__init__()
+        self.d_model = d_model
         self.epsilon = 1e-6 # A constant we are going to use in the calculation of the Norm
         # We need to initialize both Gamma and Beta as well since they are learnable parameters in the Architecture
         self.beta = nn.Parameter(torch.zeros(self.d_model))
@@ -28,7 +31,7 @@ class AddNorm(nn.Module):
         """
         self.X_attention = X
         self.X_input = X_input
-        self.d_model = X_input.shape(1)
+        self.d_model = X_input.shape[1]
         try:
             self.output = self.X_attention + self.X_input
         except ValueError as error:
