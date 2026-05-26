@@ -27,7 +27,7 @@ class Attention(nn.Module):
         self.W_v = np.random.rand(self.d_model, self.d_k)
 
     
-    def forward(self):
+    def forward(self, X):
         """
         This forward API will be used to calculate the output for the Attention Block
         """
